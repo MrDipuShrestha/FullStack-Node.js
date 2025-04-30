@@ -4,20 +4,34 @@ const app = express(); // express lai trigger gareko
 // let app = require("express")(); (Second approach)
 
 require("./database/connection"); // importing database configuration
+app.use(express.json()); // to parse json data from request body
 
-app.get("/get-books", async function (req, res) {
+app.get("/books", async function (req, res) {
   // logic to fetch book from database
   const datas = await books.findAll(); // get all data from table
   res.json({ messgae: "book fetch successfully", data: datas });
 });
 
-app.post("/books", function (req, res) {
+app.post("/books", async function (req, res) {
   // logic to add book to database
-  res.json({ messgae: "book added successfully" }); // corrected message
+  console.log(req.body);
+  // const bookName = req.body.bookName;
+  const { bookName, bookPrice, bookAuther, bookGenre } = req.body; // destructuring
+  // console.log(bookName);
+  // console.log(bookPrice);
+  // check if all data aakoxa bane only processed, else not process
+  await books.create({
+    bookName: bookName,
+    bookPrice: bookPrice,
+    bookAuther: bookAuther,
+    bookGenre: bookGenre,
+  });
+
+  res.json({ message: "book added successfully" });
 });
 
 app.delete("/books/:id", function (req, res) {
-  res.json({ message: "Book deletd ssuccessfully." });
+  res.json({ message: "Book deleted successfully." });
 });
 
 app.patch("/books/:id", function (req, res) {

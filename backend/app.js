@@ -1,17 +1,19 @@
 const express = require("express"); // express require gareko
+const { books } = require("./database/connection");
 const app = express(); // express lai trigger gareko
 // let app = require("express")(); (Second approach)
 
 require("./database/connection"); // importing database configuration
 
-app.get("/get-books", function (req, res) {
+app.get("/get-books", async function (req, res) {
   // logic to fetch book from database
-  res.json({ messgae: "book fetch successfully" });
+  const datas = await books.findAll(); // get all data from table
+  res.json({ messgae: "book fetch successfully", data: datas });
 });
 
 app.post("/books", function (req, res) {
   // logic to add book to database
-  res.json({ messgae: "book fetch successfully" });
+  res.json({ messgae: "book added successfully" }); // corrected message
 });
 
 app.delete("/books/:id", function (req, res) {

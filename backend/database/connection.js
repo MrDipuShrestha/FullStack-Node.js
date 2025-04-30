@@ -32,7 +32,8 @@ db.products = require("./models/product.model")(sequelize, DataTypes);
 
 // code for make model migrations
 sequelize.sync({ force: false, alter: false }).then(() => {
-  console.log("Migrate complete");
+  // force effect the data also so use alter
+  console.log("Migration complete");
 });
 
 module.exports = db;

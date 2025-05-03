@@ -65,7 +65,7 @@ exports.editBook = async function (req, res) {
       });
     }
 
-    await book.update({
+    const updated_data = await book.update({
       bookName: bookName,
       bookPrice: bookPrice,
       bookAuther: bookAuther,
@@ -74,6 +74,7 @@ exports.editBook = async function (req, res) {
 
     res.status(200).json({
       message: "Book updated successfully",
+      updated_data,
     });
   } catch (error) {
     res.status(400).json({

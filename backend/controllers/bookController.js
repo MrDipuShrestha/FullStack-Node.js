@@ -14,6 +14,12 @@ exports.fetchBooks = async (req, res) => {
 exports.addBooks = async (req, res) => {
   const { bookName, bookPrice, bookAuther, bookGenre } = req.body;
 
+  if (!bookName | !bookPrice | !bookAuther | !bookGenre) {
+    res.status(400).json({
+      message: "All fields are required.",
+    });
+  }
+
   await books.create({
     bookName: bookName,
     bookPrice: bookPrice,
@@ -29,11 +35,12 @@ exports.addBooks = async (req, res) => {
 exports.deleteBook = async function (req, res) {
   // logic to delete book
   const id = req.params.id;
+  // const id = req.body.id;  => get id from body ( not professional use )
 
   try {
     const deleteted = await books.destroy({
       where: { id: id },
-    });
+    }); // delete the book related to id given in the param
 
     if (deleteted) {
       res.json({
@@ -57,20 +64,34 @@ exports.editBook = async function (req, res) {
   const { bookName, bookPrice, bookAuther, bookGenre } = req.body;
 
   try {
-    const book = await books.findByPk(id);
+    // const book = await books.findByPk(id);
 
-    if (!book) {
-      res.status(404).json({
-        message: "Book not found",
-      });
-    }
+    // if (!book) {
+    //   res.status(404).json({
+    //     message: "Book not found",
+    //   });
+    // }
 
-    const updated_data = await book.update({
-      bookName: bookName,
-      bookPrice: bookPrice,
-      bookAuther: bookAuther,
-      bookGenre: bookGenre,
-    });
+    // const updated_data = await book.update({
+    //   bookName: bookName,
+    //   bookPrice: bookPrice,
+    //   bookAuther: bookAuther,
+    //   bookGenre: bookGenre,
+    // });
+
+    const updated_data = await book.update(
+      {
+        bookName: bookName,
+        bookPrice: bookPrice,
+        bookAuther: bookAuther,
+        bookGenre: bookGenre,
+      },
+      {
+        where: {
+          id: id,
+        },
+      }
+    );
 
     res.status(200).json({
       message: "Book updated successfully",
